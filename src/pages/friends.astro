@@ -1,0 +1,83 @@
+---
+import { getEntry, render } from "astro:content";
+import Markdown from "@components/misc/Markdown.astro";
+import I18nKey from "../i18n/i18nKey";
+import { i18n } from "../i18n/translation";
+import MainGridLayout from "../layouts/MainGridLayout.astro";
+import FriendCard from "@components/FriendCard.astro";
+
+const friendsPost = await getEntry("spec", "friends");
+
+if (!friendsPost) {
+	throw new Error("Friends page content not found");
+}
+
+const { Content } = await render(friendsPost);
+
+const friends = [
+    {
+        name: "fuwari",
+        description: "博客主题",
+        url: "https://github.com/saicaca/fuwari",
+        avatar: "assets/images/demo-avatar.png",
+        tag: "博客"
+    },
+    {
+        name: "Astro",
+        description: "The web framework for content-driven web apps.",
+        url: "https://astro.build",
+        avatar: "https://astro.build/favicon.svg",
+        tag: "框架"
+    },
+    {
+        name: "这真的不是我说的",
+        description: "一个神人",
+        url: "https://space.bilibili.com/480073649",
+        avatar: "assets/images/shenren.webp",
+        tag: "神人" 
+    },
+    {
+        name: "Edgeone picture ",
+        description: "一个在线图床",
+        url: "https://picture.sanring.sbs",
+        avatar: "https://github.com/saicaca.png",
+        tag: "图床"
+    },
+]
+
+const tags = ["全部", ...new Set(friends.map(f => f.tag).filter(Boolean))];
+---
+<MainGridLayout title="友人帐" description="友情链接">
+    <div class="flex flex-col gap-6 w-full">
+        <div class="card-base z-10 px-9 py-6 relative w-full ">
+            <Markdown class="mt-2 text-75">
+                <Content />
+            </Markdown>
+        </div>
+        <div class="flex flex-wrap gap-2 px-2">
+            {tags.map(tag => (
+                <button 
+                    class="filter-btn px-4 py-1.5 rounded-lg bg-[var(--card-bg)] hover:bg-[var(--btn-card-bg-hover)] transition text-75 text-sm font-medium border border-black/5 dark:border-white/5 active:scale-95 shadow-sm"
+                    data-tag={tag}
+                >
+                    {tag}
+                </button>
+            ))}
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="friend-grid">
+            {friends.map(friend => (
+                <div class="friend-card-wrapper" data-tag={friend.tag}>
+                    <FriendCard {...friend} />
+                </div>
+            ))}
+        </div>
+    </div>
+</MainGridLayout>
+
+
+<style>
+    .active-filter {
+        @apply bg-[var(--primary)] text-white dark:text-black/80 border-[var(--primary)] shadow-md;
+    }
+</style>

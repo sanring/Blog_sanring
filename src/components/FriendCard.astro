@@ -1,0 +1,25 @@
+---
+import { Icon } from "astro-icon/components";
+import ImageWrapper from "./misc/ImageWrapper.astro";
+
+interface Props {
+	name: string;
+	description: string;
+	url: string;
+	avatar: string;
+	tag?: string;
+}
+
+const { name, description, url, avatar, tag } = Astro.props;
+---
+<a href={url} target="_blank" class="card-base flex items-center p-4 gap-4 hover:bg-[var(--btn-card-bg-hover)] active:scale-95 transition-all no-styling relative overflow-hidden group">
+    <div class="w-16 h-16 rounded-xl overflow-hidden shrink-0 shadow-sm border border-black/5 dark:border-white/5">
+        <ImageWrapper src={avatar} alt={name} class="w-full h-full" />
+    </div>
+    <div class="flex flex-col justify-center overflow-hidden pr-2">
+        <div class="font-bold text-lg text-90 truncate">{name}</div>
+        <div class="text-75 text-sm line-clamp-1">{description}</div>
+        {tag && <div class="text-[var(--primary)] text-xs mt-1 px-2 py-0.5 rounded-md bg-[var(--primary-bg)] w-fit font-medium">{tag}</div>}
+    </div>
+    <Icon name="material-symbols:open-in-new" class="absolute top-2 right-2 text-30 opacity-0 group-hover:opacity-100 transition-opacity" />
+</a>
